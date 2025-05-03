@@ -31,7 +31,7 @@ local function adjustTargetZoneSize(targetZone, difficultyLevel, enable)
     
     -- Calculate new size based on difficulty
     local newSizeOffset = originalSize.X.Offset * difficultyLevel
-    
+
     -- Calculate new position to maintain center alignment
     local newPositionOffset = centerX - (newSizeOffset / 2)
     
@@ -76,7 +76,7 @@ local function cleanupQTE()
             activeQTE.inputConn:Disconnect()
         end
         if activeQTE.gui then
-            activeQTE.gui.Enabled = false
+            activeQTE.gui:Destroy()
         end
         activeQTE = nil
     end
@@ -101,7 +101,17 @@ function QTEService.startQTE(config, callback)
     end
     
     -- Cache GUI elements
-    local gui = player:WaitForChild("PlayerGui"):WaitForChild(guiName)
+    local playerGui = player:WaitForChild("PlayerGui")
+    local originalGui = playerGui:FindFirstChild(guiName)
+    
+    if not originalGui then
+        warn("QTE GUI not found:", guiName)
+        return
+    end
+    
+    local gui = originalGui:Clone()
+    gui.Parent = playerGui
+    
     local mainFrame = gui:WaitForChild("Frame")
     local itemImageFrames = mainFrame:WaitForChild("ItemImages"):GetChildren()
     local qteFrame = mainFrame:WaitForChild("QTEFrame")
@@ -137,17 +147,14 @@ function QTEService.startQTE(config, callback)
         end
     end
     
-    -- Get first item and adjust difficulty for all target zones
-    local droppedItem = config.droppedItems[1]
-    local difficultyLevel = droppedItem.EasyRate or 0.5
-    
     -- Adjust all target zones
     for idx, targetZone in ipairs(targetZones:GetChildren()) do
-        print("target zone pickable",config.droppedItems[idx].isPickable)
+        local itemDifficultyLevel = config.droppedItems[idx].EasyRate
+        print("itemDifficultyLevel", itemDifficultyLevel)
         if not config.droppedItems[idx].isPickable then
-            adjustTargetZoneSize(targetZone, difficultyLevel, false)
+            adjustTargetZoneSize(targetZone, itemDifficultyLevel, false)
         end
-        adjustTargetZoneSize(targetZone, difficultyLevel,true)
+        adjustTargetZoneSize(targetZone, itemDifficultyLevel,true)
     end
     
     -- Setup cursor
@@ -178,7 +185,6 @@ function QTEService.startQTE(config, callback)
     local function finishQTE(success,hitItem)
         if not activeQTE then return end
         
-        local attempts = activeQTE.attempts
         activeQTE.isActive = false
         
         -- Clean up resources
