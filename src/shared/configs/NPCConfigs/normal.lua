@@ -1,11 +1,17 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local ItemGrade = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("enums"):WaitForChild("itemGrade"))
 
 return {
-    name = "normal",
+    npcType = "normal",
     qteDifficulty = {
         targetZoneSizeRange = {30, 60},
         cursorSpeed = 1.0,
         timeLimit = 2.0,
         maxAttempts = 5,
     },
-    itemsDropRate = {},
+    maxOfDropItems = 3,
+    typeDropRates = {
+        [ItemGrade.COMMON] = 1,
+    }
 }
