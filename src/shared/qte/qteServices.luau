@@ -5,7 +5,6 @@ local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local typeOfQTEMapToGuiName = require(script.Parent.Parent:WaitForChild('enums'):FindFirstChild("typeOfQTEMapToGuiName"))
 local specialImage = require(script.Parent.Parent:WaitForChild("configs"):WaitForChild("SpecialConfigs"):FindFirstChild("specialImage"))
-local helperFunction = require(script.Parent.Parent:WaitForChild("utils"):WaitForChild("function"))
 
 local QTEService = {}
 local activeQTE = nil
@@ -21,10 +20,8 @@ local function adjustTargetZoneSize(targetZone, difficultyLevel, enable)
 
     if not enable then
         targetZone.Size = UDim2.new(0, 0, 0, 0)
-        targetZone.Position = UDim2.new(0, 0, 0, 0)
         return
     end
-
 
     local originalSize = targetZone.Size
     local originalPosition = targetZone.Position
@@ -146,6 +143,7 @@ function QTEService.startQTE(config, callback)
     
     -- Adjust all target zones
     for idx, targetZone in ipairs(targetZones:GetChildren()) do
+        print("target zone pickable",config.droppedItems[idx].isPickable)
         if not config.droppedItems[idx].isPickable then
             adjustTargetZoneSize(targetZone, difficultyLevel, false)
         end

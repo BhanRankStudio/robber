@@ -58,6 +58,8 @@ local function getRandomItemTypes(typeDropRates, maxItems)
             end
         end
     end
+
+    print("selectedGrades", selectedGrades)
     
     return selectedGrades
 end
@@ -78,7 +80,7 @@ local function getRandomItems(numberOfItems, items)
     local selected = {}
     local availableItems = {table.unpack(items)} -- make a shallow copy
 
-    for _ = 1, math.min(numberOfItems, #availableItems) do
+    for _ = 1, numberOfItems do
         -- Calculate total DropRate
         local totalRate = 0
         for _, item in ipairs(availableItems) do

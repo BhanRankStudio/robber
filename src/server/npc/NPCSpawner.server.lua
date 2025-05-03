@@ -51,18 +51,21 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem,npcModel)
         for idx, item in ipairs(npc.droppedItems) do
             if item.Id == hitItem.Id then
                 allNPCs[npcId].droppedItems[idx].isPickable = false
+
+                print("after process", allNPCs)
+
+                -- remove the NPC If all items are not pickable
+                local pickable = helperFunction.filter(function(item)
+                    return item.isPickable == true
+                end, allNPCs[npcId].droppedItems)
+                if #pickable == 0 then
+                    npcServices.removeNPCFromAllNPCs(npcId, allNPCs)
+                    npcModel:Destroy()
+                end
                 break
             end
         end
 
-        -- remove the NPC If all items are not pickable
-        local pickable = helperFunction.filter(function(item)
-            return item.isPickable == true
-        end, allNPCs[npcId].droppedItems)
-        if #pickable == 0 then
-            npcServices.removeNPCFromAllNPCs(npcId, allNPCs)
-            npcModel:Destroy()
-        end
     end
 end)
 
