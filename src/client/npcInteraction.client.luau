@@ -3,12 +3,11 @@ local QTEService = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild
 local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEvent")
 
 QTEEvent.OnClientEvent:Connect(function(npcConfig)
-    print("NPC Type:", npcConfig)
-    QTEService.startQTE(npcConfig.qteDifficulty, function(success)
-        if success then
-            print("PASS")
+    QTEService.startQTE(npcConfig, function(success, hitItem)
+        if success and hitItem then
+            print("Player picked up:", hitItem)
         else
-            print("NOT PASS")
+            print("QTE failed or no item picked")
         end
     end)
 end)

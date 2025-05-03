@@ -20,11 +20,14 @@ function npcServices.findNPCModel(npcType)
     return nil -- Return nil if no matching model is found
 end
 
-function npcServices.generateNPCInfomation(npcModel)
+function npcServices.generateNPCInfomation(npcModel, npcList)
     local npcType = npcModel:FindFirstChild("NPCType")
     local npcConfiguration = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("configs"):WaitForChild("NPCConfigs"):FindFirstChild(npcType.Value))
-    local dropedItems = itemServices.getDropItem(npcConfiguration)
-    print("droped items", dropedItems)
+    local droppedItems, lenghtOfDropedItem = itemServices.getDropItem(npcConfiguration)
+    npcList[npcModel.UniqueID.Value].droppedItems = droppedItems
+    npcList[npcModel.UniqueID.Value].lenghtOfDropedItem = lenghtOfDropedItem
+    npcList[npcModel.UniqueID.Value].npcType = npcType.Value
+    npcList[npcModel.UniqueID.Value].npcConfiguration = npcConfiguration
 end
 
 function npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)
@@ -39,7 +42,7 @@ end
 function npcServices.addNewNPCToAllNPCs(npcModel, npcList)
     local uniqueId = npcModel:FindFirstChild("UniqueID")
     if uniqueId and uniqueId:IsA("StringValue") then
-        npcList[uniqueId.Value] = npcModel
+        npcList[uniqueId.Value] = {}
     else
         warn("No UniqueID found in cloned NPC model:", npcModel.Name)
     end
@@ -47,7 +50,6 @@ end
 
 function npcServices.removeNPCFromAllNPCs(uniqueId, npcList)
     if npcList[uniqueId] then
-        npcList[uniqueId]:Destroy()
         npcList[uniqueId] = nil
     else
         warn("No NPC found with UniqueID:", uniqueId)

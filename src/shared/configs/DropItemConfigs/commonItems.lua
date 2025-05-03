@@ -1,42 +1,20 @@
 return {
     {
         Name = "Cash",
-        DropRate = 0.8,
+        DropRate = 0.5,
+        EasyRate = 1,
+        assetId = "rbxassetid://140525813552947"
     },
     {
         Name = "Phone",
         DropRate = 0.5,
+        EasyRate = 0.3,
+        assetId = "rbxassetid://84104669755619"
     },
     {
-        Name = "Watch",
-        DropRate = 0.6,
+        Name = "Key",
+        DropRate = 0.5,
+        EasyRate = 0.3,
+        assetId = "rbxassetid://77506332916797"
     },
-    {
-        Name = "Wallet",
-        DropRate = 0.7,
-    },
-    {
-        Name = "Keys",
-        DropRate = 0.65,
-    },
-    {
-        Name = "Sunglasses",
-        DropRate = 0.45,
-    },
-    {
-        Name = "Earbuds",
-        DropRate = 0.1,
-    },
-    {
-        Name = "Credit Card",
-        DropRate = 0.55,
-    },
-    {
-        Name = "Necklace",
-        DropRate = 0.3,
-    },
-    {
-        Name = "Coins",
-        DropRate = 0.75,
-    }
 }

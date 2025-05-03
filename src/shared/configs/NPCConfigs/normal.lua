@@ -5,12 +5,11 @@ local ItemGrade = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild(
 return {
     npcType = "normal",
     qteDifficulty = {
-        targetZoneSizeRange = {30, 60},
-        cursorSpeed = 1.0,
-        timeLimit = 2.0,
-        maxAttempts = 5,
+        cursorSpeed = 1,
+        timeLimit = 40,
+        maxAttempts = 1,
     },
-    maxOfDropItems = 3,
+    maxOfDropItems = 2,
     typeDropRates = {
         [ItemGrade.COMMON] = 1,
     }

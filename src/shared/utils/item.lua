@@ -113,11 +113,13 @@ end
     @return: [{
                        ["DropRate"] = 0.08333333333333334,
                        ["Grade"] = "COMMON",
+                       ["isPickable] = true,
                        ["Name"] = "Sunglasses"
             }]
 ]]
 function itemServices.getDropItem(npcConfig)
-    local dropItems = {}
+    local droppedItems = {}
+    local lenghtOfDropedItem = 0
 
     -- Random select type of item to drop
     local selectedItemGrades = getRandomItemTypes(npcConfig.typeDropRates, npcConfig.maxOfDropItems)
@@ -129,17 +131,18 @@ function itemServices.getDropItem(npcConfig)
     for grade,count in pairs(groupedItemGrades) do
         local items = DropItemConfigs[grade]
         local itemsNormalized = weightNormalizeProp(items)
-        print(itemsNormalized)
         local selectedItems = getRandomItems(count, itemsNormalized)
 
         for _, item in ipairs(selectedItems) do
             local itemClone = table.clone(item)
+            itemClone.isPickable = true
             itemClone.Grade = grade
-            table.insert(dropItems, itemClone)
+            table.insert(droppedItems, itemClone)
+            lenghtOfDropedItem += 1
         end
     end
 
-    return dropItems
+    return droppedItems , lenghtOfDropedItem
 end
 
 return itemServices
