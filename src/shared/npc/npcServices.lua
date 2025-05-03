@@ -28,6 +28,7 @@ function npcServices.generateNPCInfomation(npcModel, npcList)
     npcList[npcModel.UniqueID.Value].lenghtOfDropedItem = lenghtOfDropedItem
     npcList[npcModel.UniqueID.Value].npcType = npcType.Value
     npcList[npcModel.UniqueID.Value].npcConfiguration = npcConfiguration
+    npcList[npcModel.UniqueID.Value].id = npcModel.UniqueID.Value
 end
 
 function npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)

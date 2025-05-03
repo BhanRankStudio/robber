@@ -5,6 +5,7 @@ local UIS = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local typeOfQTEMapToGuiName = require(script.Parent.Parent:WaitForChild('enums'):FindFirstChild("typeOfQTEMapToGuiName"))
 local specialImage = require(script.Parent.Parent:WaitForChild("configs"):WaitForChild("SpecialConfigs"):FindFirstChild("specialImage"))
+local helperFunction = require(script.Parent.Parent:WaitForChild("utils"):WaitForChild("function"))
 
 local QTEService = {}
 local activeQTE = nil
@@ -16,7 +17,15 @@ local function addImageToFrame(frame, imageId, isPickable)
 end
 
 -- Improved target zone adjustment
-local function adjustTargetZoneSize(targetZone, difficultyLevel)
+local function adjustTargetZoneSize(targetZone, difficultyLevel, enable)
+
+    if not enable then
+        targetZone.Size = UDim2.new(0, 0, 0, 0)
+        targetZone.Position = UDim2.new(0, 0, 0, 0)
+        return
+    end
+
+
     local originalSize = targetZone.Size
     local originalPosition = targetZone.Position
     
@@ -120,7 +129,7 @@ function QTEService.startQTE(config, callback)
             targetZoneToItem[targetZone] = item
         end
     end
-    
+
     -- Show the GUI
     gui.Enabled = true
     
@@ -136,12 +145,15 @@ function QTEService.startQTE(config, callback)
     local difficultyLevel = droppedItem.EasyRate or 0.5
     
     -- Adjust all target zones
-    for _, targetZone in ipairs(targetZones:GetChildren()) do
-        adjustTargetZoneSize(targetZone, difficultyLevel)
+    for idx, targetZone in ipairs(targetZones:GetChildren()) do
+        if not config.droppedItems[idx].isPickable then
+            adjustTargetZoneSize(targetZone, difficultyLevel, false)
+        end
+        adjustTargetZoneSize(targetZone, difficultyLevel,true)
     end
     
     -- Setup cursor
-    local cursorWidth = math.random(5, 15)
+    local cursorWidth = math.random(5, 5)
     cursor.Size = UDim2.new(0, cursorWidth, 1, 0)
     cursor.Position = UDim2.new(0, 0, 0, 0)
     
@@ -164,8 +176,6 @@ function QTEService.startQTE(config, callback)
         targetZoneToItem = targetZoneToItem,
     }
 
-    print("activeQTE:", activeQTE)
-    
     -- Function to finish the QTE
     local function finishQTE(success,hitItem)
         if not activeQTE then return end
