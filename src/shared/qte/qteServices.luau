@@ -15,9 +15,8 @@ local function addImageToFrame(frame, imageId, isPickable)
     imageLabel.Image = isPickable and imageId or specialImage["lock"]
 end
 
--- Improved target zone adjustment
+-- Improved target zone adjustment with a fixed base size
 local function adjustTargetZoneSize(targetZone, difficultyLevel, enable)
-
     if not enable then
         targetZone.Size = UDim2.new(0, 0, 0, 0)
         return
@@ -25,19 +24,16 @@ local function adjustTargetZoneSize(targetZone, difficultyLevel, enable)
 
     local originalSize = targetZone.Size
     local originalPosition = targetZone.Position
-    
-    -- Calculate center position
-    local centerX = originalPosition.X.Scale + (originalPosition.X.Offset + originalSize.X.Offset / 2)
-    
-    -- Calculate new size based on difficulty
-    local newSizeOffset = originalSize.X.Offset * difficultyLevel
+    local originalSizeXScale = originalSize.X.Scale
+    local originalPositionXScale = originalPosition.X.Scale
 
-    -- Calculate new position to maintain center alignment
-    local newPositionOffset = centerX - (newSizeOffset / 2)
-    
-    -- Apply changes directly
-    targetZone.Size = UDim2.new(originalSize.X.Scale, newSizeOffset, originalSize.Y.Scale, originalSize.Y.Offset)
-    targetZone.Position = UDim2.new(originalPosition.X.Scale, newPositionOffset, originalPosition.Y.Scale, originalPosition.Y.Offset)
+    local newSizeXScale = originalSizeXScale * difficultyLevel
+
+    local diffOfOriginalSizeXScaleWithNewSizeXScale = originalSizeXScale - newSizeXScale
+    local newPositionXScale = originalPositionXScale + (diffOfOriginalSizeXScaleWithNewSizeXScale / 2)
+
+    targetZone.Size = UDim2.new(newSizeXScale, originalSize.Width, originalSize.Y.Scale, originalSize.Height)
+    targetZone.Position = UDim2.new(newPositionXScale, originalPosition.X.Offset, originalPosition.Y.Scale, originalPosition.Y.Offset)
 end
 
 -- Improved cursor-in-target-zone check that checks all target zones
@@ -140,7 +136,7 @@ function QTEService.startQTE(config, callback)
     -- Show the GUI
     gui.Enabled = true
     
-    -- Setup item images
+    -- Setup item images (redundant, can be removed since already done above)
     for idx, item in ipairs(config.droppedItems) do
         if idx <= #itemImageFrames then
             addImageToFrame(itemImageFrames[idx], item.assetId, item.isPickable)
@@ -149,12 +145,10 @@ function QTEService.startQTE(config, callback)
     
     -- Adjust all target zones
     for idx, targetZone in ipairs(targetZones:GetChildren()) do
-        local itemDifficultyLevel = config.droppedItems[idx].EasyRate
+        local item = config.droppedItems[idx]
+        local itemDifficultyLevel = item.EasyRate
         print("itemDifficultyLevel", itemDifficultyLevel)
-        if not config.droppedItems[idx].isPickable then
-            adjustTargetZoneSize(targetZone, itemDifficultyLevel, false)
-        end
-        adjustTargetZoneSize(targetZone, itemDifficultyLevel,true)
+        adjustTargetZoneSize(targetZone, itemDifficultyLevel, item.isPickable)
     end
     
     -- Setup cursor
@@ -182,7 +176,7 @@ function QTEService.startQTE(config, callback)
     }
 
     -- Function to finish the QTE
-    local function finishQTE(success,hitItem)
+    local function finishQTE(success, hitItem)
         if not activeQTE then return end
         
         activeQTE.isActive = false
@@ -192,7 +186,7 @@ function QTEService.startQTE(config, callback)
         
         -- Call the callback with results
         if callback then
-            callback(success,hitItem)
+            callback(success, hitItem)
         end
     end
     
@@ -253,9 +247,9 @@ function QTEService.startQTE(config, callback)
             
             -- End QTE if successful or max attempts reached
             if success then
-                finishQTE(true,hitItem)
+                finishQTE(true, hitItem)
             elseif activeQTE.attempts >= maxAttempts then
-                finishQTE(false,nil)
+                finishQTE(false, nil)
             end
         end
     end)
