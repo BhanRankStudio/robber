@@ -4,7 +4,6 @@ local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEven
 local QTEResult = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEResult")
 
 QTEEvent.OnClientEvent:Connect(function(npcConfig, npcModel)
-    print("npc config", npcConfig)
     QTEService.startQTE(npcConfig, function(success, hitItem)
         if success and hitItem then
             QTEResult:FireServer(npcConfig , hitItem, npcModel)

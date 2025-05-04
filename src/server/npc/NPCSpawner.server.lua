@@ -52,8 +52,6 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem,npcModel)
             if item.Id == hitItem.Id then
                 allNPCs[npcId].droppedItems[idx].isPickable = false
 
-                print("after process", allNPCs)
-
                 -- remove the NPC If all items are not pickable
                 local pickable = helperFunction.filter(function(item)
                     return item.isPickable == true

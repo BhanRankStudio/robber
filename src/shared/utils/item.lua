@@ -59,8 +59,6 @@ local function getRandomItemTypes(typeDropRates, maxItems)
         end
     end
 
-    print("selectedGrades", selectedGrades)
-    
     return selectedGrades
 end
 

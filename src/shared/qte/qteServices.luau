@@ -147,7 +147,6 @@ function QTEService.startQTE(config, callback)
     for idx, targetZone in ipairs(targetZones:GetChildren()) do
         local item = config.droppedItems[idx]
         local itemDifficultyLevel = item.EasyRate
-        print("itemDifficultyLevel", itemDifficultyLevel)
         adjustTargetZoneSize(targetZone, itemDifficultyLevel, item.isPickable)
     end
     
