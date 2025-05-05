@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 
-local DropItemConfigs = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("configs"):WaitForChild("DropItemConfigs"))
+local DropItemConfigs = require(ServerStorage:WaitForChild("configs"):WaitForChild("DropItemConfigs"))
 local helperFunction = require(script.Parent:WaitForChild("function"))
 
 local itemServices = {}

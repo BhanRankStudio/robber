@@ -1,8 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 
-local npcServices = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("npc"):WaitForChild("npcServices"))
+local QTEStart = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEStart")
+local QTEServerService = require(ServerStorage:WaitForChild("qteServices"):WaitForChild("qteServices"))
+local npcServices = require(ServerStorage:WaitForChild("npcServices"):WaitForChild("npcServices"))
 local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEvent")
 local QTEResult = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEResult")
 local helperFunction = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("utils"):WaitForChild("function"))
@@ -10,14 +13,15 @@ local helperFunction = require(ReplicatedStorage:WaitForChild("Shared"):WaitForC
 local spawnerPart = Workspace:WaitForChild("spawnNPC")
 local spawnerPrompt = spawnerPart:WaitForChild("ProximityPrompt")
 
-local allNPCs = {} -- This will hold all spawned NPCs
+local allNPCs = {} -- This will hold all spawned NPCs infomation
+local npcModels = {} -- This will hold all NPC models
 
 local function spawnNPC(npcType)
     local npcModel = npcServices.findNPCModel(npcType)
     if npcModel then
         -- npc creation process
         local newNPC = npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)
-        npcServices.addNewNPCToAllNPCs(newNPC, allNPCs)
+        npcServices.addNewNPCToAllNPCs(newNPC, allNPCs,npcModels)
         npcServices.generateNPCInfomation(newNPC, allNPCs)
 
         newNPC.Parent = Workspace
@@ -29,7 +33,7 @@ local function spawnNPC(npcType)
                 -- destroy the NPC when interacted with
                 local uniqueId = newNPC:FindFirstChild("UniqueID")
                 if uniqueId and uniqueId:IsA("StringValue") then
-                    QTEEvent:FireClient(player, allNPCs[uniqueId.Value], newNPC)
+                    QTEEvent:FireClient(player, allNPCs[uniqueId.Value])
                 else
                     warn("No UniqueID found in NPC model:", newNPC.Name)
                 end
@@ -41,7 +45,23 @@ local function spawnNPC(npcType)
     end
 end
 
-QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem,npcModel)
+QTEStart.OnServerEvent:Connect(function(player, npcConfig)
+    -- prepare qte config to send to client to be rendered
+    local qteInfo = QTEServerService.GetReadyQTE(player, npcConfig)
+
+    -- fire client to start QTE
+    QTEStart:FireClient(player, qteInfo, npcConfig)
+end)
+
+local function destroyNPC(id)
+    local npcModel = npcModels[id]
+    if npcModel then
+        npcModel:Destroy()
+        npcModels[id] = nil -- remove from the models list
+    end
+end
+
+QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
     local npcId = npcConfig.id
     local npc = allNPCs[npcId]
 
@@ -58,12 +78,11 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem,npcModel)
                 end, allNPCs[npcId].droppedItems)
                 if #pickable == 0 then
                     npcServices.removeNPCFromAllNPCs(npcId, allNPCs)
-                    npcModel:Destroy()
+                    destroyNPC(npcId)
                 end
                 break
             end
         end
-
     end
 end)
 
