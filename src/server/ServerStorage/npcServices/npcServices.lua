@@ -40,10 +40,11 @@ function npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)
     return clonedModel
 end
 
-function npcServices.addNewNPCToAllNPCs(npcModel, npcList)
+function npcServices.addNewNPCToAllNPCs(npcModel, npcList, npcModelsList)
     local uniqueId = npcModel:FindFirstChild("UniqueID")
     if uniqueId and uniqueId:IsA("StringValue") then
         npcList[uniqueId.Value] = {}
+        npcModelsList[uniqueId.Value] = npcModel
     else
         warn("No UniqueID found in cloned NPC model:", npcModel.Name)
     end
