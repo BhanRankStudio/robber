@@ -9,7 +9,7 @@ local QTEService = {}
 local activeQTE = nil
 
 -- Reusable function to add image to frame
-local function addImageToFrame(frame, imageId, isPickable)
+local function addImageToFrame(frame, imageId)
     local imageLabel = frame:WaitForChild("Image")
     imageLabel.Image = imageId 
 end
@@ -123,7 +123,7 @@ function QTEService.startQTE(config, callback)
     local targetZoneToItem = {}
     for idx, item in ipairs(config.droppedItems) do
         if idx <= #itemImageFrames then
-            addImageToFrame(itemImageFrames[idx], item.assetId, item.isPickable)
+            addImageToFrame(itemImageFrames[idx], item.assetId)
         end
         -- Map target zones to items (assuming target zones are ordered similarly)
         local targetZone = targetZones:GetChildren()[idx]
@@ -138,7 +138,7 @@ function QTEService.startQTE(config, callback)
     -- Setup item images (redundant, can be removed since already done above)
     for idx, item in ipairs(config.droppedItems) do
         if idx <= #itemImageFrames then
-            addImageToFrame(itemImageFrames[idx], item.assetId, item.isPickable)
+            addImageToFrame(itemImageFrames[idx], item.assetId)
         end
     end
     
