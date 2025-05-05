@@ -22,7 +22,7 @@ end
 
 function npcServices.generateNPCInfomation(npcModel, npcList)
     local npcType = npcModel:FindFirstChild("NPCType")
-    local npcConfiguration = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("configs"):WaitForChild("NPCConfigs"):FindFirstChild(npcType.Value))
+    local npcConfiguration = require(ServerStorage:WaitForChild("configs"):WaitForChild("NPCConfigs"):FindFirstChild(npcType.Value))
     local droppedItems, lenghtOfDropedItem = itemServices.getDropItem(npcConfiguration)
     npcList[npcModel.UniqueID.Value].droppedItems = droppedItems
     npcList[npcModel.UniqueID.Value].lenghtOfDropedItem = lenghtOfDropedItem

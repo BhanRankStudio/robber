@@ -4,7 +4,6 @@ local UIS = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local typeOfQTEMapToGuiName = require(script.Parent.Parent:WaitForChild('enums'):FindFirstChild("typeOfQTEMapToGuiName"))
-local specialImage = require(script.Parent.Parent:WaitForChild("configs"):WaitForChild("SpecialConfigs"):FindFirstChild("specialImage"))
 
 local QTEService = {}
 local activeQTE = nil
@@ -12,7 +11,7 @@ local activeQTE = nil
 -- Reusable function to add image to frame
 local function addImageToFrame(frame, imageId, isPickable)
     local imageLabel = frame:WaitForChild("Image")
-    imageLabel.Image = isPickable and imageId or specialImage["lock"]
+    imageLabel.Image = imageId 
 end
 
 -- Improved target zone adjustment with a fixed base size

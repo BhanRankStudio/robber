@@ -18,8 +18,13 @@
 
     "ServerScriptService": {
       "Server": {
-        "$path": "src/server"
+        "$path": "src/server/ServerScriptService"
       }
+    },
+
+    "ServerStorage": {
+      "$ignoreUnknownInstances": true,
+      "$path": "src/server/ServerStorage"
     },
 
     "StarterPlayer": {

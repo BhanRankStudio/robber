@@ -1,8 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 
-local npcServices = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("npc"):WaitForChild("npcServices"))
+local npcServices = require(ServerStorage:WaitForChild("npcServices"):WaitForChild("npcServices"))
 local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEvent")
 local QTEResult = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEResult")
 local helperFunction = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("utils"):WaitForChild("function"))
