@@ -72,6 +72,12 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
             if item.Id == hitItem.Id then
                 allNPCs[npcId].droppedItems[idx].isPickable = false
 
+                -- add item to player backpack with image show
+                local playerBackpack = player:FindFirstChild("Backpack")
+                local itemClone = ServerStorage:WaitForChild("items"):WaitForChild("CM_Cash"):Clone()
+                itemClone.Parent = playerBackpack
+
+
                 -- remove the NPC If all items are not pickable
                 local pickable = helperFunction.filter(function(item)
                     return item.isPickable == true
