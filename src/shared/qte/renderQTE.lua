@@ -1,6 +1,7 @@
 
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
+local blurEffect = game.Lighting:FindFirstChild("Blur")
 
 local function isCursorInAnyTargetZone(cursor, targetZones)
     local cursorStart = cursor.AbsolutePosition.X
@@ -28,6 +29,7 @@ local function isCursorInAnyTargetZone(cursor, targetZones)
 end
 
 local function cleanupQTE(activeQTE)
+    blurEffect.Enabled = false
     if activeQTE then
         if activeQTE.moveConn then
             activeQTE.moveConn:Disconnect()
@@ -58,6 +60,7 @@ end
 
 function renderQTE(activeQTE, callback)
     -- show gui
+    blurEffect.Enabled = true
     activeQTE.gui.Enabled = true
 
     activeQTE.qteStartTime = tick()
