@@ -1,8 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
+local ServerStorage = game:GetService("ServerStorage")
 
 local typeOfQTEMapToGuiName = require(ReplicatedStorage:WaitForChild('Shared'):WaitForChild('enums'):FindFirstChild("typeOfQTEMapToGuiName"))
+local randomService = require(ReplicatedStorage:WaitForChild('Shared'):WaitForChild('utils'):WaitForChild('ramdom'))
+local specialImage = require(ServerStorage:WaitForChild('configs'):WaitForChild('SpecialConfigs'):WaitForChild('specialImage'))
 
 local QTEServerService = {}
 local activeQTE = nil
@@ -43,7 +44,7 @@ function QTEServerService.GetReadyQTE(player, config)
     local maxAttempts = npcETQConfig.maxAttempts
     
     -- Get correct UI based on item length
-    local guiName = typeOfQTEMapToGuiName[lengthOfDroppedItem]
+    local guiName = typeOfQTEMapToGuiName[5]
     if not guiName then
         warn("Invalid lengthOfDroppedItem or mapping missing for typeOfQTEMapToGuiName")
         return
@@ -66,40 +67,61 @@ function QTEServerService.GetReadyQTE(player, config)
     local qteFrame = mainFrame:WaitForChild("QTEFrame")
     local cursor = qteFrame:WaitForChild("Cursor")
     local targetZones = qteFrame:WaitForChild("TargetZones")
-    
+
+
     -- Setup z-index for visuals (ensure cursor is on top)
     cursor.ZIndex = 3
     for _, child in ipairs(targetZones:GetChildren()) do
         child.ZIndex = 2
     end
 
+    -- if lengthOfDroppedItem less than #targetZones or #itemImageFrames, randomize where to drop
+
     -- Setup item images and map target zones to items
     local targetZoneToItem = {}
-    for idx, item in ipairs(config.droppedItems) do
-        if idx <= #itemImageFrames then
-            addImageToFrame(itemImageFrames[idx], item.assetId)
+    local allTargetZones = targetZones:GetChildren()
+
+    table.sort(allTargetZones, function(a, b)
+        return a.Name < b.Name
+    end)
+
+    table.sort(itemImageFrames, function(a, b)
+        return a.Name < b.Name
+    end)
+    
+    if lengthOfDroppedItem ~= #allTargetZones then
+        -- Randomize the target zones to drop items
+        local randomNumbers = randomService.getListDifferentInt(1, #allTargetZones, lengthOfDroppedItem)
+
+        -- add image to frame
+        for idx, randomNumber in ipairs(randomNumbers) do
+            local item = config.droppedItems[idx]
+            addImageToFrame(itemImageFrames[randomNumber], item.assetId)
+            adjustTargetZoneSize(allTargetZones[randomNumber], item.EasyRate, item.isPickable)
+
+            -- Map target zones to items (assuming target zones are ordered similarly)
+            local targetZone = allTargetZones[randomNumber]
+            if targetZone then
+                targetZoneToItem[targetZone.Name] = item
+            end
         end
-        -- Map target zones to items (assuming target zones are ordered similarly)
-        local targetZone = targetZones:GetChildren()[idx]
-        if targetZone then
-            targetZoneToItem[targetZone.Name] = item
+
+        -- add locked item to unused item image frames
+        -- if idx of itemImageFrames is not in randomNumbers, add locked item to it
+        for idx, itemImageFrame in ipairs(itemImageFrames) do
+            if not table.find(randomNumbers, idx) then
+                addImageToFrame(itemImageFrame, specialImage['lock'])
+            end
+        end
+
+        -- adjust the rest of the target zones to be invisible
+        for idx, targetZone in ipairs(allTargetZones) do
+            if not table.find(randomNumbers, idx) then
+                targetZone.Size = UDim2.new(0, 0, 0, 0)
+            end
         end
     end
 
-    -- Setup item images (redundant, can be removed since already done above)
-    for idx, item in ipairs(config.droppedItems) do
-        if idx <= #itemImageFrames then
-            addImageToFrame(itemImageFrames[idx], item.assetId)
-        end
-    end
-    
-    -- Adjust all target zones
-    for idx, targetZone in ipairs(targetZones:GetChildren()) do
-        local item = config.droppedItems[idx]
-        local itemDifficultyLevel = item.EasyRate
-        adjustTargetZoneSize(targetZone, itemDifficultyLevel, item.isPickable)
-    end
-    
     -- Setup cursor
     local cursorWidth = math.random(5, 5)
     cursor.Size = UDim2.new(0, cursorWidth, 1, 0)
@@ -112,7 +134,7 @@ function QTEServerService.GetReadyQTE(player, config)
         attempts = 0,
         maxAttempts = maxAttempts,
         cursorWidth = cursorWidth,
-        startTime = tick(),
+        startTime = 0,
         timeLimit = timeLimit,
         cursorSpeed = cursorSpeed,
         cursor = cursor,
@@ -120,7 +142,7 @@ function QTEServerService.GetReadyQTE(player, config)
         qteFrame = qteFrame,
         movingRight = true,
         frameWidth = 0,
-        qteStartTime = tick(),
+        qteStartTime = 0,
         targetZoneToItem = targetZoneToItem,
     }
 

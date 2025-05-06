@@ -60,17 +60,22 @@ function renderQTE(activeQTE, callback)
     -- show gui
     activeQTE.gui.Enabled = true
 
+    activeQTE.qteStartTime = tick()
+    activeQTE.startTime = tick()
+
     -- Start cursor movement with back-and-forth motion
     activeQTE.moveConn = RunService.RenderStepped:Connect(function(deltaTime)
         if not activeQTE or not activeQTE.isActive then return end
         
+
         -- Check if time limit has been exceeded
         local totalElapsedTime = tick() - activeQTE.qteStartTime
         if totalElapsedTime >= activeQTE.timeLimit then
-            finishQTE(false)
+            print("QTE failed due to time limit")
+            finishQTE(false, nil, callback, activeQTE)
             return
         end
-        
+
         -- Get frame width on first run
         if activeQTE.frameWidth == 0 then
             activeQTE.frameWidth = activeQTE.qteFrame.AbsoluteSize.X
