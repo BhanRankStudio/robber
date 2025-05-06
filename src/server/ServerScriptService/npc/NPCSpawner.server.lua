@@ -9,6 +9,7 @@ local npcServices = require(ServerStorage:WaitForChild("npcServices"):WaitForChi
 local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEvent")
 local QTEResult = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEResult")
 local helperFunction = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("utils"):WaitForChild("function"))
+local InventoryServices = require(ServerStorage:WaitForChild("inventoryServices"):WaitForChild("inventoryServices"))
 
 local spawnerPart = Workspace:WaitForChild("spawnNPC")
 local spawnerPrompt = spawnerPart:WaitForChild("ProximityPrompt")
@@ -73,10 +74,7 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 allNPCs[npcId].droppedItems[idx].isPickable = false
 
                 -- add item to player backpack with image show
-                local playerBackpack = player:FindFirstChild("Backpack")
-                local itemClone = ServerStorage:WaitForChild("items"):WaitForChild("CM_Cash"):Clone()
-                itemClone.Parent = playerBackpack
-
+                InventoryServices.AddItem(player, hitItem)
 
                 -- remove the NPC If all items are not pickable
                 local pickable = helperFunction.filter(function(item)
