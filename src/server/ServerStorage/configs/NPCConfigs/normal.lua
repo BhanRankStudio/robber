@@ -21,7 +21,6 @@ return {
     },
     maxOfDropItems = 2,
     typeDropRates = {
-        [ItemGrade.COMMON] = 0.5,
-        [ItemGrade.RARE] = 0.5,
+        [ItemGrade.COMMON] = 1,
     }
 }
