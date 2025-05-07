@@ -4,14 +4,16 @@ local ServerStorage = game:GetService("ServerStorage")
 local typeOfQTEMapToGuiName = require(ReplicatedStorage:WaitForChild('Shared'):WaitForChild('enums'):FindFirstChild("typeOfQTEMapToGuiName"))
 local randomService = require(ReplicatedStorage:WaitForChild('Shared'):WaitForChild('utils'):WaitForChild('ramdom'))
 local specialImage = require(ServerStorage:WaitForChild('configs'):WaitForChild('SpecialConfigs'):WaitForChild('specialImage'))
+local itemImageBackgroudColor = require(ServerStorage:WaitForChild('configs'):WaitForChild('itemImageBackgroudColor'))
 
 local QTEServerService = {}
 local activeQTE = nil
 
 -- Reusable function to add image to frame
-local function addImageToFrame(frame, imageId)
+local function addImageToFrame(frame, imageId, itemGrade)
     local imageLabel = frame:WaitForChild("Image")
     imageLabel.Image = imageId 
+    imageLabel.BackgroundColor3 = itemImageBackgroudColor[itemGrade] or Color3.fromRGB(255, 255, 255)
 end
 
 -- Improved target zone adjustment with a fixed base size
@@ -96,7 +98,7 @@ function QTEServerService.GetReadyQTE(player, config)
         -- add image to frame
         for idx, randomNumber in ipairs(randomNumbers) do
             local item = config.droppedItems[idx]
-            addImageToFrame(itemImageFrames[randomNumber], item.assetId)
+            addImageToFrame(itemImageFrames[randomNumber], item.assetId, item.Grade)
             adjustTargetZoneSize(allTargetZones[randomNumber], item.EasyRate, item.isPickable)
 
             -- Map target zones to items (assuming target zones are ordered similarly)
