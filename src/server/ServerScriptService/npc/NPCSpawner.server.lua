@@ -10,6 +10,7 @@ local QTEEvent = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEEven
 local QTEResult = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("QTEResult")
 local helperFunction = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("utils"):WaitForChild("function"))
 local InventoryServices = require(ServerStorage:WaitForChild("inventoryServices"):WaitForChild("inventoryServices"))
+local PlayerDataHandler = require(game.ServerStorage:WaitForChild("player"):WaitForChild("playerDataHandler"))
 
 local spawnerPart = Workspace:WaitForChild("spawnNPC")
 local spawnerPrompt = spawnerPart:WaitForChild("ProximityPrompt")
@@ -71,6 +72,13 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
         -- edit item in droppedItems that matches hiwItemId
         for idx, item in ipairs(npc.droppedItems) do
             if item.Id == hitItem.Id then
+                local playerData = PlayerDataHandler:Get(player)
+                local numberOfItems = #playerData.items
+
+                if numberOfItems >= playerData.inventorySlotMax then
+                    return
+                end
+
                 allNPCs[npcId].droppedItems[idx].isPickable = false
 
                 -- add item to player backpack with image show

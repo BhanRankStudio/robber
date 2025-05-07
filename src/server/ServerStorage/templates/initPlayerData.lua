@@ -2,6 +2,6 @@
 
 return {
     money = 0,
-    inventoryLimit = 10,
+    inventorySlotMax = 50,
     items = {}
 }
