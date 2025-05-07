@@ -37,4 +37,9 @@ AskPriceButton.MouseButton1Click:Connect(function()
     end
 end)
 
-
+MerchantSellRemote.OnClientEvent:Connect(function()
+    NPCMerchantGui.Enabled = false
+    itemNameLabel.Text = ""
+    itemImageLabel.Image = ""
+    currentItem = nil
+end)

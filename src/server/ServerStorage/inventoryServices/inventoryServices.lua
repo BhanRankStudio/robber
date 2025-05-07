@@ -22,6 +22,7 @@ function inventoryServices.AddItem(player, item)
         -- TODO: Change this to appropriate item
         local itemClone = game.ServerStorage.items[item.Id]:Clone()
         itemClone.Parent = playerBackpack
+        itemClone.Name = item.toolId
     end
 end
 
@@ -29,7 +30,7 @@ function inventoryServices.RemoveItem(player, item)
     local playerData = PlayerDataHandler:Get(player)
     
     for i, v in ipairs(playerData.items) do
-        if v.id == item.id then
+        if v.toolId == item.toolId then
             table.remove(playerData.items, i)
             break
         end
@@ -41,7 +42,7 @@ function inventoryServices.RemoveItem(player, item)
     PlayerInventorySlotRemote:FireClient(player, #playerData.items, playerData.inventorySlotMax)
 
     -- Remove the item from the player's backpack
-    local playerTool = Workspace:FindFirstChild(player.Name):FindFirstChildWhichIsA("Tool") or player.Backpack:FindFirstChildWhichIsA("Tool")
+    local playerTool = player.Backpack:FindFirstChild(item.toolId) or Workspace:FindFirstChild(player.Name):FindFirstChild(item.toolId)
     if playerTool then
         playerTool:Destroy()
     end
