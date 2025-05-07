@@ -32,6 +32,8 @@ local function spawnNPC(npcType)
         local prompt = newNPC:FindFirstChildWhichIsA("ProximityPrompt", true)
         if prompt then
             prompt.Triggered:Connect(function(player)
+                -- Not other players can interact with the NPC
+                newNPC.ProximityPrompt.Enabled = false
                 -- destroy the NPC when interacted with
                 local uniqueId = newNPC:FindFirstChild("UniqueID")
                 if uniqueId and uniqueId:IsA("StringValue") then
@@ -80,6 +82,10 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 end
 
                 allNPCs[npcId].droppedItems[idx].isPickable = false
+
+                -- Randoom weight of that item
+                hitItem.weight = math.random(1, 100)
+                hitItem.toolId = hitItem.Id .. " " .. hitItem.weight .. " " .. "kg"
 
                 -- add item to player backpack with image show
                 InventoryServices.AddItem(player, hitItem)

@@ -24,10 +24,7 @@ local function onPlayerAdded(player)
                 -- Check if backpack is ready
                 if player:FindFirstChild("Backpack") then
                     tool.Parent = player.Backpack
-                else
-                    -- Wait for backpack to be available
-                    player:WaitForChild("Backpack")
-                    tool.Parent = player.Backpack
+                    tool.Name = item.toolId
                 end
             else
                 warn("Item not found: " .. item.Id)
