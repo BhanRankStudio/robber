@@ -46,6 +46,8 @@ local function onPlayerAdded(player)
     else
         -- create new player data
         PlayerDataStoreService.SetPlayerData(player.UserId, initPlayerData)
+        PlayerMoneyRemote:FireClient(player, initPlayerData["money"])
+        PlayerInventorySlotRemote:FireClient(player, 0, initPlayerData["inventorySlotMax"])
     end
 end
 
