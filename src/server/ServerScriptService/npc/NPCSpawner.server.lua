@@ -101,6 +101,9 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 break
             end
         end
+    else
+        local npcModel = npcModels[npcId]
+        npcModel:WaitForChild("ProximityPrompt").Enabled = true
     end
 end)
 
