@@ -68,6 +68,7 @@ end
 QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
     local npcId = npcConfig.id
     local npc = allNPCs[npcId]
+    local npcModel = npcModels[npcId]
 
     -- update droppedItems related to hitItem
     if npc and hitItem then
@@ -78,6 +79,7 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 local numberOfItems = #playerData.items
 
                 if numberOfItems >= playerData.inventorySlotMax then
+                    npcModel:WaitForChild("ProximityPrompt").Enabled = true
                     return
                 end
 
@@ -98,13 +100,13 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                     npcServices.removeNPCFromAllNPCs(npcId, allNPCs)
                     destroyNPC(npcId)
                 end
+                npcModel:WaitForChild("ProximityPrompt").Enabled = true
                 break
             end
         end
     else
-        local npcModel = npcModels[npcId]
         npcModel:WaitForChild("ProximityPrompt").Enabled = true
-    end
+    end 
 end)
 
 spawnerPrompt.Triggered:Connect(function(player)
