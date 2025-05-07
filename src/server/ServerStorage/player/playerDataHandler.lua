@@ -5,7 +5,6 @@ local PlayerDataHandler = {}
 local playerDatas = {} -- Table to temporarily store player data for quick access
 
 function PlayerDataHandler:Set(player, data)
-	print(player)
 	playerDatas[player.UserId] = data
 end
 

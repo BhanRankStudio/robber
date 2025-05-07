@@ -5,7 +5,6 @@ local playerDataStoreServices = {}
 
 function playerDataStoreServices.GetPlayerData(playerId)
     local success, result = pcall(function()
-        print("Fetching data for player ID:", playerId)
         local playerData = playerDataStore:GetAsync(playerId)
         if playerData then
             return playerData
