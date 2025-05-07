@@ -1,3 +1,4 @@
+local Workspace = game:GetService("Workspace")
 local PlayerDataStoreService = require(game.ServerStorage:WaitForChild("dataStorageServices"):WaitForChild("playerDataStoreServices"))
 local PlayerDataHandler = require(game.ServerStorage:WaitForChild("player"):WaitForChild("playerDataHandler"))
 local PlayerInventorySlotRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("PlayerInventorySlot")
@@ -40,12 +41,9 @@ function inventoryServices.RemoveItem(player, item)
     PlayerInventorySlotRemote:FireClient(player, #playerData.items, playerData.inventorySlotMax)
 
     -- Remove the item from the player's backpack
-    local playerBackpack = player:FindFirstChild("Backpack")
-    if playerBackpack then
-        local itemClone = playerBackpack:FindFirstChild(item.id)
-        if itemClone then
-            itemClone:Destroy()
-        end
+    local playerTool = Workspace:FindFirstChild(player.Name):FindFirstChildWhichIsA("Tool") or player.Backpack:FindFirstChildWhichIsA("Tool")
+    if playerTool then
+        playerTool:Destroy()
     end
 end
 

@@ -1,20 +1,40 @@
 local Players = game:GetService("Players")
-local MerchantSellRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("MerchantSell")
+local MerchantGuiRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Merchant"):WaitForChild("MerchantGui")
+local MerchantSellRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Merchant"):WaitForChild("MerchantSell")
+local MerchantAskPriceRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Merchant"):WaitForChild("MerchantAskPrice")
 local NPCMerchantGui = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("NPCMerchant")
 
-local SellButton = NPCMerchantGui:WaitForChild("sell")
-local AskPriceButton = NPCMerchantGui:WaitForChild("askPrice")
+local MerchantFrame = NPCMerchantGui:WaitForChild("Frame")
 
-MerchantSellRemote.OnClientEvent:Connect(function(item)
+-- Information
+local itemNameLabel = MerchantFrame:WaitForChild("itemName")
+local itemImageLabel = MerchantFrame:WaitForChild("itemImage")
+
+-- Actions Button
+local SellButton = MerchantFrame:WaitForChild("sell")
+local AskPriceButton = MerchantFrame:WaitForChild("askPrice")
+
+local currentItem = nil
+
+MerchantGuiRemote.OnClientEvent:Connect(function(item)
     if item then
         NPCMerchantGui.Enabled = true
+        itemNameLabel.Text = item.Name
+        itemImageLabel.Image = item.assetId
+        currentItem = item
     end
 end)
 
 SellButton.MouseButton1Click:Connect(function()
-   
+    if currentItem then
+        MerchantSellRemote:FireServer(currentItem)
+    end
 end)
 
 AskPriceButton.MouseButton1Click:Connect(function()
-    
+    if currentItem then
+        MerchantAskPriceRemote:FireServer(currentItem)
+    end
 end)
+
+
