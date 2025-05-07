@@ -3,6 +3,7 @@ local MerchantGuiRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitFor
 local MerchantSellRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Merchant"):WaitForChild("MerchantSell")
 local MerchantAskPriceRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Merchant"):WaitForChild("MerchantAskPrice")
 local NPCMerchantGui = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("NPCMerchant")
+local blurEffect = game.Lighting:FindFirstChild("Blur")
 
 local MerchantFrame = NPCMerchantGui:WaitForChild("Frame")
 
@@ -18,6 +19,7 @@ local currentItem = nil
 
 MerchantGuiRemote.OnClientEvent:Connect(function(item)
     if item then
+        blurEffect.Enabled = true
         NPCMerchantGui.Enabled = true
         itemNameLabel.Text = item.Name
         itemImageLabel.Image = item.assetId
@@ -38,6 +40,7 @@ AskPriceButton.MouseButton1Click:Connect(function()
 end)
 
 MerchantSellRemote.OnClientEvent:Connect(function()
+    blurEffect.Enabled = false
     NPCMerchantGui.Enabled = false
     itemNameLabel.Text = ""
     itemImageLabel.Image = ""

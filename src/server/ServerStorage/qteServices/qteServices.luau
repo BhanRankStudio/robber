@@ -112,7 +112,7 @@ function QTEServerService.GetReadyQTE(player, config)
         -- if idx of itemImageFrames is not in randomNumbers, add locked item to it
         for idx, itemImageFrame in ipairs(itemImageFrames) do
             if not table.find(randomNumbers, idx) then
-                addImageToFrame(itemImageFrame, specialImage['lock'])
+                addImageToFrame(itemImageFrame, specialImage['lock'], "lockColor")
             end
         end
 
