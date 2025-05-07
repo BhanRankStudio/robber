@@ -21,7 +21,7 @@ MerchantGuiRemote.OnClientEvent:Connect(function(item)
     if item then
         blurEffect.Enabled = true
         NPCMerchantGui.Enabled = true
-        itemNameLabel.Text = item.Name
+        itemNameLabel.Text = item.toolId
         itemImageLabel.Image = item.assetId
         currentItem = item
     end

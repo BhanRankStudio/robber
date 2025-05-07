@@ -115,7 +115,7 @@ function renderQTE(activeQTE, callback)
     activeQTE.inputConn = UIS.InputBegan:Connect(function(input, processed)
         if processed or not activeQTE or not activeQTE.isActive then return end
         
-        if input.KeyCode == Enum.KeyCode.Space then
+        if input.KeyCode == Enum.KeyCode.F then
             -- Increment attempts on spacebar press
             activeQTE.attempts += 1
             
