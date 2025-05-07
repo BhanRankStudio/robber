@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local PlayerDataStoreService = require(game.ServerStorage:WaitForChild("dataStorageServices"):WaitForChild("playerDataStoreServices"))
 local initPlayerData = require(game.ServerStorage:WaitForChild("templates"):WaitForChild("initPlayerData"))
 local PlayerMoneyRemote = game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("PlayerMoney")
+local PlayerDataHandler = require(game.ServerStorage:WaitForChild("player"):WaitForChild("playerDataHandler"))
 
 local function onPlayerAdded(player)
     -- Wait for the player to fully load
@@ -9,6 +10,9 @@ local function onPlayerAdded(player)
     
     local playerData = PlayerDataStoreService.GetPlayerData(player.UserId)
     if playerData then
+        
+        PlayerDataHandler:Set(player, playerData)
+
         -- Player item
         local playerItems = playerData["items"]
         -- Clone tools to player backpack
