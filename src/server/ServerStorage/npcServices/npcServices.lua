@@ -8,24 +8,30 @@ local uuidService = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChil
 local itemServices = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("utils"):WaitForChild("item"))
 
 function npcServices.findNPCModel(npcType)
-    for _, model in pairs(NPCFolder:GetChildren()) do
-        if model:IsA("Model") then
-            -- Look for a StringValue that identifies the NPC type
-            local typeValue = model:FindFirstChild("NPCType")
-            if typeValue and typeValue:IsA("StringValue") and typeValue.Value == npcType then
-                return model
-            end
+    -- access to npcType folder
+    local npcTypeFolder = NPCFolder:FindFirstChild(npcType)
+
+    -- random one of the NPCs
+    if npcTypeFolder then
+        local npcModels = npcTypeFolder:GetChildren()
+        if #npcModels > 0 then
+            return npcModels[math.random(1, #npcModels)]
+        else
+            warn("No NPC models found for type:", npcType)
+            return nil
         end
+    else
+        warn("NPC type folder not found:", npcType)
+        return nil
     end
-    return nil -- Return nil if no matching model is found
 end
 
 function npcServices.generateNPCInfomation(npcModel, npcList)
     local npcType = npcModel:FindFirstChild("NPCType")
     local npcConfiguration = require(ServerStorage:WaitForChild("configs"):WaitForChild("NPCConfigs"):FindFirstChild(npcType.Value))
-    local droppedItems, lenghtOfDropedItem = itemServices.getDropItem(npcConfiguration)
+    local droppedItems, lengthOfDroppedItem = itemServices.getDropItem(npcConfiguration)
     npcList[npcModel.UniqueID.Value].droppedItems = droppedItems
-    npcList[npcModel.UniqueID.Value].lenghtOfDropedItem = lenghtOfDropedItem
+    npcList[npcModel.UniqueID.Value].lengthOfDroppedItem = lengthOfDroppedItem
     npcList[npcModel.UniqueID.Value].npcType = npcType.Value
     npcList[npcModel.UniqueID.Value].npcConfiguration = npcConfiguration
     npcList[npcModel.UniqueID.Value].id = npcModel.UniqueID.Value
@@ -37,6 +43,7 @@ function npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)
     uniqueId.Name = "UniqueID"
     uniqueId.Value = uuidService.generateShort()
     uniqueId.Parent = clonedModel
+
     return clonedModel
 end
 

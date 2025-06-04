@@ -91,7 +91,7 @@ function QTEServerService.GetReadyQTE(player, config)
         return a.Name < b.Name
     end)
     
-    if lengthOfDroppedItem ~= #allTargetZones then
+    -- if lengthOfDroppedItem ~= #allTargetZones then
         -- Randomize the target zones to drop items
         local randomNumbers = randomService.getListDifferentInt(1, #allTargetZones, lengthOfDroppedItem)
 
@@ -122,7 +122,7 @@ function QTEServerService.GetReadyQTE(player, config)
                 targetZone.Size = UDim2.new(0, 0, 0, 0)
             end
         end
-    end
+    -- end
 
     -- Setup cursor
     local cursorWidth = math.random(5, 5)

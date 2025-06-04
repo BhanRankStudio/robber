@@ -1,6 +1,4 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local ItemGrade = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("enums"):WaitForChild("itemGrade"))
+local ItemGrade = require(game.ReplicatedStorage:WaitForChild("Shared"):WaitForChild("enums"):WaitForChild("itemGrade"))
 
 --[[
     -- npcType should be matched with the "StringValue" named "NPCType" in the NPC model
@@ -13,7 +11,7 @@ local ItemGrade = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild(
 ]]
 
 return {
-    npcType = "normal",
+    npcType = "common",
     qteDifficulty = {
         cursorSpeed = 1,
         timeLimit = 40,

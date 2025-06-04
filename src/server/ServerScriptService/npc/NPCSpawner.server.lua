@@ -23,11 +23,13 @@ local function spawnNPC(npcType)
     if npcModel then
         -- npc creation process
         local newNPC = npcServices.cloneNPCModelWithUniqueIdentifier(npcModel)
+
         npcServices.addNewNPCToAllNPCs(newNPC, allNPCs,npcModels)
         npcServices.generateNPCInfomation(newNPC, allNPCs)
 
         newNPC.Parent = Workspace
-        newNPC:SetPrimaryPartCFrame(spawnerPart.CFrame)
+        -- set position of the NPC to stand on the floor
+        newNPC:SetPrimaryPartCFrame(spawnerPart.CFrame * CFrame.new(0, 3, 0)) -- Adjust height to avoid clipping into the ground
 
         local prompt = newNPC:FindFirstChildWhichIsA("ProximityPrompt", true)
         if prompt then
@@ -96,11 +98,11 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 local pickable = helperFunction.filter(function(item)
                     return item.isPickable == true
                 end, allNPCs[npcId].droppedItems)
+                npcModel:WaitForChild("ProximityPrompt").Enabled = true
                 if #pickable == 0 then
                     npcServices.removeNPCFromAllNPCs(npcId, allNPCs)
                     destroyNPC(npcId)
                 end
-                npcModel:WaitForChild("ProximityPrompt").Enabled = true
                 break
             end
         end
@@ -110,5 +112,5 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
 end)
 
 spawnerPrompt.Triggered:Connect(function(player)
-    spawnNPC("normal")
+    spawnNPC("legendary")
 end)

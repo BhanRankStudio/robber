@@ -120,7 +120,7 @@ end
 ]]
 function itemServices.getDropItem(npcConfig)
     local droppedItems = {}
-    local lenghtOfDropedItem = 0
+    local lengthOfDroppedItem = 0
 
     -- Random select type of item to drop
     local selectedItemGrades = getRandomItemTypes(npcConfig.typeDropRates, npcConfig.maxOfDropItems)
@@ -139,11 +139,11 @@ function itemServices.getDropItem(npcConfig)
             itemClone.isPickable = true
             itemClone.Grade = grade
             table.insert(droppedItems, itemClone)
-            lenghtOfDropedItem += 1
+            lengthOfDroppedItem += 1
         end
     end
 
-    return droppedItems , lenghtOfDropedItem
+    return droppedItems , lengthOfDroppedItem
 end
 
 return itemServices
