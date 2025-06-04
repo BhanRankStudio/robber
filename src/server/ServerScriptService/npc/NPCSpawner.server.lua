@@ -86,8 +86,8 @@ QTEResult.OnServerEvent:Connect(function(player, npcConfig ,hitItem)
                 allNPCs[npcId].droppedItems[idx].isPickable = false
 
                 -- Randoom weight of that item
-                hitItem.weight = math.random(1, 100)
-                hitItem.toolId = hitItem.Id .. " " .. hitItem.weight .. " " .. "kg"
+                hitItem.weight = math.random(1, 10)
+                hitItem.toolId = hitItem.Id .. " " .. hitItem.weight * 10 .. " " .. "kg"
 
                 -- add item to player backpack with image show
                 InventoryServices.AddItem(player, hitItem)

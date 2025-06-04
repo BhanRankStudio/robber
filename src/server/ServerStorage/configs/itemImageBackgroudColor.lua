@@ -4,8 +4,10 @@ local ItemGrade = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild(
 
 return {
     [ItemGrade.COMMON] = Color3.fromRGB(255, 255, 255), -- White
+    [ItemGrade.UNCOMMON] = Color3.fromRGB(0, 255, 0), -- Green
     [ItemGrade.RARE] = Color3.fromRGB(0, 0, 255), -- Blue
     [ItemGrade.EPIC] = Color3.fromRGB(255, 0, 255), -- Purple
     [ItemGrade.LEGENDARY] = Color3.fromRGB(255, 215, 0), -- Gold
+    [ItemGrade.MYSTICAL] = Color3.fromRGB(128, 0, 128), -- Dark Purple
     ["lockColor"] = Color3.fromRGB(0,0,0)
 }

@@ -25,6 +25,7 @@ local function onPlayerAdded(player)
                 if player:FindFirstChild("Backpack") then
                     tool.Parent = player.Backpack
                     tool.Name = item.toolId
+                    tool:ScaleTo(item.weight)
                 end
             else
                 warn("Item not found: " .. item.Id)

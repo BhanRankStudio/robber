@@ -23,6 +23,7 @@ function inventoryServices.AddItem(player, item)
         local itemClone = game.ServerStorage.items[item.Id]:Clone()
         itemClone.Parent = playerBackpack
         itemClone.Name = item.toolId
+        itemClone:ScaleTo(item.weight)
     end
 end
 
